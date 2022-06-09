@@ -6,9 +6,9 @@ namespace toka
         if (dist == nullptr)
             dist = [](edge_t<Ed> _e) -> T
             { return (T)_e.w; };
-        std::vector<T> D(G.size(), inf);
+        std::vector<T> D(G.size() + 1, inf);
         D[src] = zero;
-        std::vector<bool> inq(G.size(), false);
+        std::vector<bool> inq(G.size() + 1, false);
         std::queue<int> q;
         q.push(src);
         inq[src] = true;
