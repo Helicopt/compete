@@ -11,7 +11,7 @@ def run(path, ifd, ofd, efd):
         p = subprocess.Popen(
             args.split(' '), stdin=ifd, stdout=ofd, stderr=efd)
     else:
-        compile_args = 'g++ {} -o ./sol'.format(path)
+        compile_args = 'g++ -std=c++14 {} -o ./sol'.format(path)
         cp = subprocess.Popen(
             compile_args.split(' '), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=efd)
         cp_code = cp.wait()
