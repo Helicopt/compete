@@ -395,6 +395,22 @@ namespace toka
             return false;
         }
 
+        operator int() const
+        {
+            if (data.size() == 0)
+                return 0;
+            return int(data[0]) * pos;
+        }
+
+        operator long long() const
+        {
+            if (data.size() == 0)
+                return 0;
+            if (data.size() == 1)
+                return (long long)(data[0]) * pos;
+            return ((long long)(data[0]) + ((long long)(data[1]) << 32)) * pos;
+        }
+
         Integer _neg()
         {
             pos = -pos;
