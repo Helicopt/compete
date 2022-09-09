@@ -1,5 +1,12 @@
 namespace toka
 {
+
+    template <typename T, typename M>
+    T secure_mod(T a, M b)
+    {
+        return (a < 0) ? ((b - (-a) % b) % b) : (a % b);
+    }
+
     template <typename T>
     T gcd(T x, T y)
     {
@@ -27,6 +34,35 @@ namespace toka
             std::swap(b, a);
         }
         return std::make_pair(b, std::make_pair(x, y));
+    }
+
+    template <typename T>
+    std::pair<T, T> CRT(T x, T a, T y, T b)
+    {
+        // px+a = qy+b
+        T d = abs(a - b);
+        auto e = extgcd(x, y);
+        if (d % e.first != 0)
+        {
+            return std::make_pair((T)0, (T)0);
+        }
+        else
+        {
+            // z % x == a
+            // z % y == b
+            T lcm = x / e.first * y;
+            T k = d / e.first;
+            if (a > b)
+            {
+                return std::make_pair((secure_mod(e.second.second, lcm) * k % lcm * y % lcm + b) % lcm, lcm);
+            }
+            else
+            {
+                return std::make_pair((secure_mod(e.second.first, lcm) * k % lcm * x % lcm + a) % lcm, lcm);
+            }
+            // e.second.first * k + y / e.first * t
+            // e.second.second * k + x / e.first * t
+        }
     }
 
     template <typename T>
@@ -85,11 +121,7 @@ namespace toka
         }
         else
         {
-            T x = d.second.first;
-            if (x >= 0)
-                return x % m;
-            else
-                return (m - (-x) % m) % m;
+            return secure_mod(d.second.first, m);
         }
     }
 
