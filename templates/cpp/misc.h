@@ -57,4 +57,30 @@ public:
             tmp.d[j] = (tmp.d[j] + mm[j] - hx[l - 1].d[j] * toka::qpow(pp[j], (r - l + 1), 1ll, mm[j]) % mm[j]) % mm[j];
         return tmp;
     }
+
+    void calc_pows(int n, long long pows[][D]) const
+    {
+        for (int i = 0; i <= n; ++i)
+        {
+            for (int j = 0; j < D; ++j)
+            {
+                if (i == 0)
+                {
+                    pows[i][j] = 1;
+                }
+                else
+                {
+                    pows[i][j] = pows[i - 1][j] * pp[j] % mm[j];
+                }
+            }
+        }
+    }
+
+    HashP hash(HashP *hx, long long pows[][D], int l, int r) const
+    {
+        auto tmp = hx[r];
+        for (int j = 0; j < D; ++j)
+            tmp.d[j] = (tmp.d[j] + mm[j] - hx[l - 1].d[j] * pows[r - l + 1][j] % mm[j]) % mm[j];
+        return tmp;
+    }
 };
