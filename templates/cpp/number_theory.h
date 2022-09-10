@@ -93,12 +93,6 @@ namespace toka
         return ret;
     }
 
-    template <typename T, typename M = unsigned long>
-    T qpow(T a, LL b, M m = 0)
-    {
-        return qpow(a, b, (T)1, m);
-    }
-
     template <typename T, typename M>
     T inv(T a, T one, M m)
     {
