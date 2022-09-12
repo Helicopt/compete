@@ -42,6 +42,9 @@ styles = {
         'py': osp.join(TEMPLATE_ROOT, 'lc_template.py'),
         'cpp': osp.join(TEMPLATE_ROOT, 'lc_template.cpp'),
     }},
+    'hackercup': {'shorts': ['hc'], 'default': 'cpp', 'templates': {
+        'cpp': osp.join(TEMPLATE_ROOT, 'hc_template.cpp'),
+    }},
     'oi': {'shorts': ['oj'], 'default': 'cpp', 'templates': {
         'py': osp.join(TEMPLATE_ROOT, 'cf_template.py'),
         'cpp': osp.join(TEMPLATE_ROOT, 'cf_template.cpp'),
