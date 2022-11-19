@@ -10,8 +10,8 @@ namespace toka
         virtual void _update(int l, int r, T &d, const T &c) = 0;
         virtual void _push(int l, int r, T &d, const T &c) = 0;
         virtual void _clear(int l, int r, T &d) = 0;
-        virtual void _pull(int l, int r, T &d, const T &lv, const T &rv) = 0;
-        virtual T _merge(int l, int r, const T &lv, const T &rv) = 0;
+        virtual void _pull(int l, int m, int r, T &d, const T &lv, const T &rv) = 0;
+        virtual T _merge(int l, int m, int r, const T &lv, const T &rv) = 0;
 
         void _insert(int u, int l, int r, int x, int y, const T &c)
         {
@@ -38,7 +38,7 @@ namespace toka
                 _insert(ll, l, m, x, m, c);
                 _insert(rr, m + 1, r, m + 1, y, c);
             }
-            _pull(l, r, _d[u], _d[ll], _d[rr]);
+            _pull(l, m, r, _d[u], _d[ll], _d[rr]);
         }
 
         T _find(int u, int l, int r, int x, int y, const T &c)
@@ -65,9 +65,9 @@ namespace toka
             {
                 auto lv = _find(ll, l, m, x, m, c);
                 auto rv = _find(rr, m + 1, r, m + 1, y, c);
-                ret = _merge(l, r, lv, rv);
+                ret = _merge(l, m, r, lv, rv);
             }
-            _pull(l, r, _d[u], _d[ll], _d[rr]);
+            _pull(l, m, r, _d[u], _d[ll], _d[rr]);
             return ret;
         }
 
@@ -126,31 +126,26 @@ namespace toka
     private:
         void _update(int l, int r, T &d, const T &c)
         {
-            d.tag = c.tag;
-            d.sum = d.tag * (r - l + 1);
+            d.tag += c.tag;
+            d.sum += c.tag * (r - l + 1);
         }
 
         void _push(int l, int r, T &d, const T &c)
         {
-            if (c.tag != -1)
-            {
-                d.tag = c.tag;
-                d.sum = d.tag * (r - l + 1);
-            }
+            _update(l, r, d, c);
         }
         void _clear(int l, int r, T &d)
         {
-            d.tag = -1;
+            d.tag = 0;
         }
-        void _pull(int l, int r, T &d, const T &lv, const T &rv)
+        void _pull(int l, int m, int r, T &d, const T &lv, const T &rv)
         {
             d.sum = lv.sum + rv.sum;
         }
-        T _merge(int l, int r, const T &lv, const T &rv)
+        T _merge(int l, int m, int r, const T &lv, const T &rv)
         {
             T ret;
-            ret.sum = lv.sum + rv.sum;
-            ret.tag = -1;
+            _pull(l, m, r, ret, lv, rv);
             return ret;
         }
 
