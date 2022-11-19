@@ -9,13 +9,14 @@ def archive(sol):
     splits = sol.split('_')
     if len(splits) <= 1:
         return
-    name, p = splits[:2]
+    name = splits[0]
+    p = '_'.join(splits[1:])
     tar = os.path.join(os.path.dirname(origin), name, p)
     tar_dir = os.path.dirname(tar)
     if not os.path.exists(tar_dir):
         os.makedirs(tar_dir, exist_ok=True)
     if os.path.exists(tar):
-        print('not {} moving to {} because it already exists'.format(origin, tar))
+        print('not moving {} to {} because it already exists'.format(origin, tar))
     else:
         os.rename(origin, tar)
         print('moving {} to {}'.format(origin, tar))

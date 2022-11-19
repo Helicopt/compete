@@ -285,6 +285,7 @@ namespace toka
                 r.data[0] = _r;
                 r.pos = pos;
                 r.clear_zeros();
+                q.clear_zeros();
             }
             else
             {
@@ -322,6 +323,8 @@ namespace toka
                 q.pos = pos * other.pos;
                 r.data.swap(cum.data);
                 r.pos = pos;
+                r.clear_zeros();
+                q.clear_zeros();
             }
         }
 
@@ -392,22 +395,38 @@ namespace toka
             return false;
         }
 
-        Integer neg() const
+        operator int() const
         {
-            auto ret = *this;
-            ret.pos = -ret.pos;
-            return ret;
+            if (data.size() == 0)
+                return 0;
+            return int(data[0]) * pos;
         }
 
-        Integer operator-() const
+        operator long long() const
         {
-            return this->neg();
+            if (data.size() == 0)
+                return 0;
+            if (data.size() == 1)
+                return (long long)(data[0]) * pos;
+            return ((long long)(data[0]) + ((long long)(data[1]) << 32)) * pos;
         }
 
         Integer _neg()
         {
             pos = -pos;
+            clear_zeros();
             return *this;
+        }
+
+        Integer neg() const
+        {
+            auto ret = *this;
+            return ret._neg();
+        }
+
+        Integer operator-() const
+        {
+            return this->neg();
         }
 
         template <typename T>
