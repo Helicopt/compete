@@ -4,24 +4,32 @@ import sys
 import os
 import subprocess
 
+from lang import get_lang, list_langs
+
 
 def run(path, ifd, ofd, efd):
-    if path.endswith('.py'):
-        args = 'python {}'.format(path)
-        p = subprocess.Popen(
-            args.split(' '), stdin=ifd, stdout=ofd, stderr=efd)
-    else:
-        compile_args = 'g++ -std=c++14 {} -o ./sol'.format(path)
+    language = None
+    lang_name = ''
+    for lang in list_langs():
+        L = get_lang(lang)
+        if L.matches_extension(path.split('.')[-1]):
+            language = L
+            lang_name = lang
+            break
+    if language is None:
+        print(f'No language found for extension {path.split(".")[-1]}')
+        return -1
+    print('Running {} using {} ({})'.format(
+        path, language.__name__, lang_name))
+    if language.requires_compilation():
         cp = subprocess.Popen(
-            compile_args.split(' '), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=efd)
+            language.compilation_command(path), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=efd)
         cp_code = cp.wait()
         if cp_code != 0:
             print('Compile Failed')
             return cp_code
-        else:
-            args = './sol'
-            p = subprocess.Popen(
-                args.split(' '), stdin=ifd, stdout=ofd, stderr=efd)
+    p = subprocess.Popen(
+        language.execution_command(path), stdin=ifd, stdout=ofd, stderr=efd)
     ret = p.wait()
     return ret
 

@@ -6,29 +6,20 @@ import argparse
 import re
 import yaml
 
-TEMPLATE_ROOT = './templates'
+from lang import get_lang, list_langs, TEMPLATE_ROOT
+
 CONTEST_ROOT = './contests'
 CACHE_ROOT = './'
 
 libs = {
-    'py': {
-        'number': {'path': osp.join(TEMPLATE_ROOT, 'py/number_theory.py'), },
-    },
-    'cpp': {
-        'graph': {'path': osp.join(TEMPLATE_ROOT, 'cpp/graph.h'), },
-        'number': {'path': osp.join(TEMPLATE_ROOT, 'cpp/number_theory.h'), },
-        'seg': {'path': osp.join(TEMPLATE_ROOT, 'cpp/segment_tree.h'), },
-        'trie': {'path': osp.join(TEMPLATE_ROOT, 'cpp/trie.h'), },
-        'spfa': {'path': osp.join(TEMPLATE_ROOT, 'cpp/spfa.h'), 'dependency': 'graph', },
-        'matrix': {'path': osp.join(TEMPLATE_ROOT, 'cpp/matrix.h'), },
-        'bigint': {'path': osp.join(TEMPLATE_ROOT, 'cpp/bigint.h'), 'dependency': 'number', },
-    },
+    lang: get_lang(lang).libraries() for lang in list_langs()
 }
 
 styles = {
     'codeforces': {'shorts': ['cf'], 'default': 'py', 'templates': {
         'py': osp.join(TEMPLATE_ROOT, 'cf_template.py'),
         'cpp': osp.join(TEMPLATE_ROOT, 'cf_template.cpp'),
+        'go': osp.join(TEMPLATE_ROOT, 'cf_template.go'),
     }},
     'atcoder': {'shorts': ['at'], 'default': 'py', 'templates': {
         'py': osp.join(TEMPLATE_ROOT, 'at_template.py'),
@@ -145,7 +136,8 @@ def get_arguments(styles):
     parser.add_argument('contest', type=str)
     parser.add_argument('-s', '--style', type=str,
                         choices=list(style_names.keys()))
-    parser.add_argument('-l', '--language', type=str)
+    parser.add_argument('-l', '--language', type=str, default=None,
+                        choices=list(libs.keys()))
     parser.add_argument('-n', '--name', type=str)
     parser.add_argument('-a', '--append', type=str, nargs='*')
     args = parser.parse_args()
@@ -164,7 +156,7 @@ def get_arguments(styles):
     if args.language is None:
         args.language = language
     if args.language is not None:
-        assert args.language in styles[args.style]['templates'],\
+        assert args.language in styles[args.style]['templates'], \
             'Template not found for language {}, available: {}'.format(
             args.language, styles[args.style]['templates'].keys())
     else:

@@ -1,6 +1,7 @@
 import os
 import sys
 from compete import styles, CONTEST_ROOT
+from lang import list_langs, get_lang
 
 
 def archive(sol):
@@ -22,8 +23,8 @@ def archive(sol):
         print('moving {} to {}'.format(origin, tar))
 
 
-def check_extension(sol):
-    return sol.split('.')[-1] in ['py', 'cpp']
+def check_extension(sol: str) -> bool:
+    return any([get_lang(lang).matches_extension(sol.split('.')[-1]) for lang in list_langs()])
 
 
 if __name__ == '__main__':
