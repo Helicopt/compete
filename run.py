@@ -22,6 +22,7 @@ def run(path, ifd, ofd, efd):
     print('Running {} using {} ({})'.format(
         path, language.__name__, lang_name))
     if language.requires_compilation():
+        print(f'Compiling with command {" ".join(language.compilation_command(path))}...')
         cp = subprocess.Popen(
             language.compilation_command(path), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=efd)
         cp_code = cp.wait()

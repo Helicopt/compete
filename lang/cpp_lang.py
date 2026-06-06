@@ -1,11 +1,12 @@
 import os.path as osp
+import os
 from ._registry import ProgrammingLanguage, register_lang, TEMPLATE_ROOT
 
 
 @register_lang('cpp')
 class CppLanguage(ProgrammingLanguage):
 
-    output_file = './sol'
+    output_file = './sol' if os.name != 'nt' else 'sol.exe'
 
     @classmethod
     def matches_extension(cls, ext):

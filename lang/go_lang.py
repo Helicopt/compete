@@ -1,10 +1,11 @@
+import os
 from ._registry import ProgrammingLanguage, register_lang
 
 
 @register_lang('go')
 class GoLanguage(ProgrammingLanguage):
 
-    output_file = './sol'
+    output_file = './sol' if os.name != 'nt' else 'sol.exe'
 
     @classmethod
     def matches_extension(cls, ext):
